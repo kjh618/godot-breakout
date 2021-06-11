@@ -1,14 +1,17 @@
 extends KinematicBody2D
 
 
-export var speed := 300.0
+export var speed := 500.0
 
-var _velocity := speed * Vector2.DOWN
+var velocity := Vector2.DOWN * speed
 
 
 func _physics_process(delta: float) -> void:
-    var collision := move_and_collide(_velocity * delta)
+    var collision := move_and_collide(velocity * delta)
+
     if collision != null:
-        _velocity = _velocity.bounce(collision.normal)
+        velocity = velocity.bounce(collision.normal)
+        velocity = (velocity + collision.collider_velocity).normalized() * speed
+
         if collision.collider.is_in_group("brick"):
             collision.collider.queue_free()
